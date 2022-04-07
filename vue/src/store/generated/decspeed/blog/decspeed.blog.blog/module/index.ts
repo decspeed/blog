@@ -4,9 +4,15 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgDeleteComment } from "./types/blog/tx";
+import { MsgCreatePost } from "./types/blog/tx";
+import { MsgCreateComment } from "./types/blog/tx";
 
 
 const types = [
+  ["/decspeed.blog.blog.MsgDeleteComment", MsgDeleteComment],
+  ["/decspeed.blog.blog.MsgCreatePost", MsgCreatePost],
+  ["/decspeed.blog.blog.MsgCreateComment", MsgCreateComment],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -39,6 +45,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgDeleteComment: (data: MsgDeleteComment): EncodeObject => ({ typeUrl: "/decspeed.blog.blog.MsgDeleteComment", value: MsgDeleteComment.fromPartial( data ) }),
+    msgCreatePost: (data: MsgCreatePost): EncodeObject => ({ typeUrl: "/decspeed.blog.blog.MsgCreatePost", value: MsgCreatePost.fromPartial( data ) }),
+    msgCreateComment: (data: MsgCreateComment): EncodeObject => ({ typeUrl: "/decspeed.blog.blog.MsgCreateComment", value: MsgCreateComment.fromPartial( data ) }),
     
   };
 };
